@@ -1,0 +1,74 @@
+<script src="js/rm_view.js" type="text/javascript"></script>
+
+<style type="text/css">
+  .input-hint {
+    font-style: italic;
+    font-size: 1em;
+    color: #DCDCDC;
+  }
+  .input-label {
+    font-style: italic;
+    font-size: 1em;
+    color: #252525;
+  }
+  #rm-view-content{
+    width: 100vw;
+  }
+  .system-input {
+    display: flex;
+    flex-flow: row;
+  }
+  div.system-input {
+    width: 50vw;
+  }
+  .system-input input {
+  }
+  .system-input button {
+    margin-left: 0.5vw;
+  }
+</style>
+<div id="rm-view-content" class="container">
+  <div id="rm-view-header" class="row  mb-3">
+    <div class="container">
+      <div class="input-hint row">Formato: (C1,T1,D1),(C2,T2,D2),...,(Cn,Tn,Dn)</div>
+      <div class="system-input row">
+        <input id="system-input-text" type="text" class="form-control system-input" placeholder="Sistema"
+        required="" autofocus="">
+        <button id="system-input-button" type="button" class="btn btn-success system-input">Evaluar</button>
+      </div>
+    </div>
+  </div>
+  <div id="hyperperiod-box">
+    <report-input v-bind:item="item" v-bind:key="item.id"></report-input>
+  </div>
+  <div id="fu-box">
+    <report-input v-bind:item="item" v-bind:key="item.id"></report-input>
+  </div>
+  <div id="n-box">
+    <report-input v-bind:item="item" v-bind:key="item.id"></report-input>
+  </div>
+  <div id="cota-liu-box">
+    <report-input v-bind:item="item" v-bind:key="item.id"></report-input>
+  </div>
+  <div id="cota-bini-box">
+    <report-input v-bind:item="item" v-bind:key="item.id"></report-input>
+  </div>
+
+
+  <!-- <div class="row">
+    <div class="container">
+      <div class="caption">
+        <div class="input-label row">Hiper período</div>
+        <div class="hyperperiod-input row">
+          <input id="hyperperiod-input-text" type="text" class="form-control hyperperiod-input"
+            style="width: 10vw;">
+        </div>
+      </div>
+    </div>
+  </div> -->
+</div>
+<script type="text/javascript">
+  $(document).ready(function (){
+    app.views.rm.init();
+  });
+</script>
