@@ -7,7 +7,7 @@
   window.Array.prototype.isArray = true;
 
   /* Global classes */
-  window.RTTask = (c, t, d) => {
+  window.RTTask = function (c, t, d) {
     /*
     C	Tiempo ejecucion
     T	Periodo
@@ -19,7 +19,7 @@
     this.fu = this.period > 0 ? this.executionTime / this.period : 0;
   };
 
-  window.RTSystem = (tasks) => {
+  window.RTSystem = function (tasks) {
     if (!tasks.isArray){
       throw 'RTSystem: Parameter is not an array'
     }

@@ -38,8 +38,8 @@ Vue.component('report-input', {
       $("#rm-view-content #system-input-button").on("click", _eventsHandlers.evaluateButton);
     },
     setComponent: function (ix, data){
-      if (!!_components) _components = [];
-      if (!!_components[ix]){
+      if (_components.length < (ix + 1)){
+        /* Build components for each calculation */
         _components.push(new Vue({
           el: data.containerID,
           data: {
@@ -55,10 +55,11 @@ Vue.component('report-input', {
      }
      else
      {
-       _components[ix].data.$item.label= !!data.label ? data.label : '',
-       _components[ix].data.$item.value= !!data.value ? data.value : 0,
-       _components[ix].data.$item.title= !!data.cotaClass ? data.title : '',
-       _components[ix].data.$item.cotaClass= !!data.cotaClass ? data.cotaClass : ''
+       /* Values will update as soon as we change them */
+       _components[ix].item.label= !!(data.label) ? data.label : '',
+       _components[ix].item.value= !!(data.value) ? data.value : 0,
+       _components[ix].item.title= !!(data.cotaClass) ? data.title : '',
+       _components[ix].item.cotaClass= !!(data.cotaClass) ? data.cotaClass : ''
      }
     },
     fillResults: function (system) {
