@@ -7,7 +7,7 @@
   window.Array.prototype.isArray = true;
 
   /* Global classes */
-  window.RTTask = function (c, t, d){
+  window.RTTask = (c, t, d) => {
     /*
     C	Tiempo ejecucion
     T	Periodo
@@ -19,7 +19,7 @@
     this.fu = this.period > 0 ? this.executionTime / this.period : 0;
   };
 
-  window.RTSystem = function (tasks){
+  window.RTSystem = (tasks) => {
     if (!tasks.isArray){
       throw 'RTSystem: Parameter is not an array'
     }
@@ -27,66 +27,66 @@
     this.hyperperiod = null;
 
     this.tasks = tasks;
+    this._tasksTiming = [];
 
-    this.getHyperperiod = function (){
-      if (!!this.hyperperiod){
-        return this.hyperperiod;
-      }
-      else {
+    this.getHyperperiod =  () => {
+      if (!this.hyperperiod){
         let periods = _.map(this.tasks, function(o){ return o.period; });
         this.hyperperiod = math.lcm.apply(null, periods);
-        return this.hyperperiod;
       }
+      return this.hyperperiod;
     };
 
-    this.getFU = function (){
-      if (!!this.fu) {
-        return this.fu;
-      }
-      else {
+    this.getFU =  () => {
+      if (!this.fu) {
         this.fu = math.sum(_.map(this.tasks, function(o){ return o.fu; }));
-        return this.fu;
       }
+      return this.fu;
     };
 
-    this.getN = function (){
-      if (!!this.n) {
-        return this.n;
-      }
-      else {
+    this.getN =  () => {
+      if (!this.n) {
         this.n = !!this.tasks ? this.tasks.length : 0;
-        return this.n;
       }
+      return this.n;
     };
 
-    this.getLiu = function (){
-      if (!!this.liu) {
-        return this.liu;
-      }
-      else {
+    this.getLiu =  () => {
+      if (!this.liu) {
         let n = this.getN();
         this.liu = math.round(n*(2^(1/n)-1), 2);
-        return this.liu;
       }
+      return this.liu;
     };
 
-    this.isValidForLiu = function () {
-      return this.getFU() <= this.getLiu();
-    };
+    this.isValidForLiu =  () => this.getFU() <= this.getLiu();
 
-    this.getBini = function (){
-      if (!!this.bini) {
-        return this.bini;
-      }
-      else {
+    this.getBini =  () => {
+      if (!this.bini) {
         this.bini = math.round(math.prod(_.map(this.tasks, function(o){ return o.fu + 1; })), 2);
         return this.bini;
       }
+      return this.bini;
     };
 
-    this.isValidForBini = function () {
-      return this.getBini() <= 2;
-    };
+    this.isValidForBini =  ()  => this.getBini() <= 2;
+
+    this.taskTiming = () => {
+      if (this._tasksTiming.length > 0) return this._tasksTiming;
+
+      for (var i = 0; i < this.tasks.length; i++) {
+        if (i == 0){
+          this._tasksTiming.push(this.task.executionTime);
+        }
+        else {
+          let prevTask = this.tasks[i - 1];
+          let prevTiming = this._taskTiming[i - 1];
+          let thisTask = this.tasks[i];
+          let idealTiming = prevTiming + thisTask.executionTime;
+          this._tasksTiming.push(math.ceiling(prevTiming + (idealTiming / prevTask.period) * thisTask.executionTime));
+        }
+      }
+    }
   };
 
   window.app =  {
@@ -178,6 +178,51 @@
           e.target.addClass("active");
           $items.forEach($e => $e.data().id !== e.target.data().id && $e.removeClass("active"));
         });
+      },
+      parseTask: task => {
+        let parsedTask = /\((\d+),(\d+),(\d+)\)/.exec(task);
+        if (parsedTask.length != 4) throw "Invalid system, can't parse";
+        return new RTTask(parsedTask[1], parsedTask[2], parsedTask[3]);
+      },
+      parseSystem: system => {
+        let charStack = [];
+        let currentTask = "";
+        let tasks = [];
+        for (var i = 0; i < system.length; i++) {
+          let currentChar = system[i];
+          switch (currentChar) {
+            case ' ':
+              break;
+            case '(':
+              charStack.push(currentChar);
+              currentTask += currentChar;
+              break;
+            case ')':
+              charStack.pop(currentChar);
+              currentTask += currentChar;
+              break;
+            case ',':
+              if (charStack.length  > 0){
+                currentTask += currentChar;
+              }
+              else {
+                tasks.push(app.utils.parseTask(currentTask));
+                currentTask = "";
+              }
+              break;
+            default:
+              currentTask += currentChar;
+          }
+        }
+
+
+        if (charStack.length > 0) throw "Parsing failed";
+
+        if (currentTask.length > 0) {
+          tasks.push(app.utils.parseTask(currentTask));
+        }
+
+        return tasks;
       }
     },
     views: {}

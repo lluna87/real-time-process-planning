@@ -1,12 +1,13 @@
 Vue.component('report-input', {
-    props: ['item'],
+    props: ['id', 'label', 'value', 'title', 'cotaClass'],
     template:
      '<div class="row">' +
       '<div class="container">' +
         '<div class="caption">' +
-          '<div class="input-label row">{{item.label}}</div>' +
-          '<div class="hyperperiod-input row">' +
-          '<input id="{{item.id}}" type="text" class="form-control hyperperiod-input" style="width: 10vw;"/>' +
+          '<div class="input-label row">{{ label }}</div>' +
+          '<div class="row">' +
+          '<input :title="title" :id="id" type="text" ' +
+            'class="form-control" :value="value" style="width: 10vw;"/>' +
           '</div>' +
         '</div>' +
       '</div>' +
@@ -19,25 +20,15 @@ Vue.component('report-input', {
   const _pattern = /\d,\d,\d*/g;
 
   let _ctx = {};
-
   let _actions = {};
-
   let _eventsHandlers = {};
+
+  let _components = [];
 
   $.extend(true, _eventsHandlers, {
     evaluateButton: function (e){
       let text = $("#rm-view-content #system-input-text").val();
-
-      let activities = [];
-      let res;
-      do {
-        res = _pattern.exec(text);
-        if (!!res){
-          let parameters = res[0].split(',');
-          activities.push(new RTTask(parameters[0], parameters[1], parameters[2]));
-        }
-      } while (res);
-
+      let activities = app.utils.parseSystem(text);
       _actions.fillResults(new RTSystem(activities));
     }
   });
@@ -46,14 +37,78 @@ Vue.component('report-input', {
     linkEvents: function (){
       $("#rm-view-content #system-input-button").on("click", _eventsHandlers.evaluateButton);
     },
+    setComponent: function (ix, data){
+      if (!!_components) _components = [];
+      if (!!_components[ix]){
+        _components.push(new Vue({
+          el: data.containerID,
+          data: {
+            item: {
+              id: data.componentID,
+              label: data.label,
+              value: data.value,
+              title: data.cotaClass,
+              cotaClass: data.cotaClass
+           }
+         }
+       }));
+     }
+     else
+     {
+       _components[ix].data.$item.label= !!data.label ? data.label : '',
+       _components[ix].data.$item.value= !!data.value ? data.value : 0,
+       _components[ix].data.$item.title= !!data.cotaClass ? data.title : '',
+       _components[ix].data.$item.cotaClass= !!data.cotaClass ? data.cotaClass : ''
+     }
+    },
     fillResults: function (system) {
       _ctx.currentSystem = system;
+      //
+      // for (var i = 0; i < components.length; i++) {
+      //   components[i].destroy();
+      // }
 
-      new Vue({ el: '#hyperperiod-box', data: { item: { id: 'hyperperiod-input', label:"Hiperperíodo", value: system.getHyperperiod() } } });
-      new Vue({ el: '#fu-box', data: { item: { id: 'fu-input', label:"FU", value: system.getFU() } } });
-      new Vue({ el: '#n-box', data: { item: { id: 'n-input', label:"N", value: system.getN() } } });
-      new Vue({ el: '#cota-liu-box', data: { item: { id: 'cota-liu-input', label:"Cota de Liu", value: system.getLiu() } } });
-      new Vue({ el: '#cota-bini-box', data: { item: { id: 'cota-bini-input', label:"Cota de Bini", value: system.getBini() } } });
+      _actions.setComponent(0, {
+        containerID: '#hyperperiod-box',
+        label: "Hiperperíodo",
+        componentID: 'hyperperiod-input',
+        value: math.round(system.getHyperperiod(), 4),
+        title: '',
+        cotaClass: ''
+      });
+      _actions.setComponent(1, {
+        containerID: '#fu-box',
+        label:"FU",
+        componentID: 'fu-input',
+        value: math.round(system.getFU(), 4),
+        title: "",
+        cotaClass: ''
+      });
+      _actions.setComponent(2, {
+        containerID: '#n-box',
+        componentID: 'n-input',
+        label:"N",
+        value: math.round(system.getN(), 4) ,
+        title: "",
+        cotaClass: ''
+        });
+      _actions.setComponent(3, {
+        containerID: '#cota-liu-box',
+        componentID: 'cota-liu-input',
+        label:"Cota de Liu",
+        value: math.round(system.getLiu(), 5),
+        cotaClass: system.isValidForBini() ? "verifies-cota" : "fails-cota",
+        title: system.isValidForLiu() ? "Verifica Liu" : "No verifica Liu",
+        });
+      _actions.setComponent(4, {
+        containerID: '#cota-bini-box',
+        componentID: 'cota-bini-input',
+        label:"Cota de Bini",
+        value: math.round(system.getBini(), 6),
+        title: system.isValidForBini() ? "Verifica Bini" : "No verifica Bini",
+        cotaClass: system.isValidForBini() ? "verifies-cota" : "fails-cota",
+      });
+
     }
   });
 

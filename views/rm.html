@@ -26,6 +26,23 @@
   .system-input button {
     margin-left: 0.5vw;
   }
+  .result-box {
+    margin-right: 40px;
+  }
+  .evaluation-section {
+    display: flex;
+    flex-flow: row;
+  }
+  .verifies-cota {
+    -webkit-box-shadow: 0px 0px 4px #21de14;
+       -moz-box-shadow: 0px 0px 4px #21de14;
+            box-shadow: 0px 0px 4px #21de14;
+  }
+  .fails-cota {
+    -webkit-box-shadow: 0px 0px 4px #e30909;
+       -moz-box-shadow: 0px 0px 4px #e30909;
+            box-shadow: 0px 0px 4px #e30909;
+  }
 </style>
 <div id="rm-view-content" class="container">
   <div id="rm-view-header" class="row  mb-3">
@@ -38,20 +55,27 @@
       </div>
     </div>
   </div>
-  <div id="hyperperiod-box">
-    <report-input v-bind:item="item" v-bind:key="item.id"></report-input>
-  </div>
-  <div id="fu-box">
-    <report-input v-bind:item="item" v-bind:key="item.id"></report-input>
-  </div>
-  <div id="n-box">
-    <report-input v-bind:item="item" v-bind:key="item.id"></report-input>
-  </div>
-  <div id="cota-liu-box">
-    <report-input v-bind:item="item" v-bind:key="item.id"></report-input>
-  </div>
-  <div id="cota-bini-box">
-    <report-input v-bind:item="item" v-bind:key="item.id"></report-input>
+  <div class="evaluation-section">
+    <div id="hyperperiod-box" class="result-box">
+      <report-input v-bind:key="item.id" v-bind:id="item.id" v-bind:value="item.value"
+        v-bind:title="item.title" v-bind:label="item.label" v-bind:class="item.cotaClass"></report-input>
+    </div>
+    <div id="fu-box" class="result-box">
+      <report-input v-bind:key="item.id" v-bind:id="item.id" v-bind:value="item.value"
+        v-bind:title="item.title" v-bind:label="item.label" v-bind:class="item.cotaClass"></report-input>
+    </div>
+    <div id="n-box" class="result-box">
+      <report-input v-bind:key="item.id" v-bind:id="item.id" v-bind:value="item.value"
+        v-bind:title="item.title" v-bind:label="item.label" v-bind:class="item.cotaClass"></report-input>
+    </div>
+    <div id="cota-liu-box" class="result-box">
+      <report-input v-bind:key="item.id" v-bind:id="item.id" v-bind:value="item.value"
+        v-bind:title="item.title" v-bind:label="item.label" v-bind:class="item.cotaClass"></report-input>
+    </div>
+    <div id="cota-bini-box" class="result-box">
+      <report-input v-bind:key="item.id" v-bind:id="item.id" v-bind:value="item.value"
+        v-bind:title="item.title" v-bind:label="item.label" v-bind:class="item.cotaClass"></report-input>
+    </div>
   </div>
 
 
