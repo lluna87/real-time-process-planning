@@ -43,6 +43,9 @@
        -moz-box-shadow: 0px 0px 4px #e30909;
             box-shadow: 0px 0px 4px #e30909;
   }
+  .setr-table thead {
+    back
+  }
 </style>
 <div id="rm-view-content" class="container">
   <div id="rm-view-header" class="row  mb-3">
@@ -77,7 +80,9 @@
         v-bind:title="item.title" v-bind:label="item.label" v-bind:class="item.cotaClass"></report-input>
     </div>
   </div>
-
+  <div id="timing-table">
+    <timing-table v-bind:rows="rows" v-bind:columns="columns"></timing-table>
+  </div>
 
   <!-- <div class="row">
     <div class="container">

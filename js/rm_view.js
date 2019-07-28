@@ -14,10 +14,27 @@ Vue.component('report-input', {
     '</div>'
 });
 
+Vue.component('timing-table', {
+  props: ['rows', 'columns'],
+  template:
+    '<table class="setr-table">' +
+      '<thead>' +
+        '<th v-for="col in columns">{{col}}</th>' +
+      '</thead>' +
+      '<tbody>' +
+        '<tr v-for="row in rows">' +
+          '<td v-for="col in columns">{{row[columns.indexOf(col)]}}</td>' +
+        '</tr>' +
+      '</tbody>' +
+    '</table>'
+});
+
 (function () {
   if (!!app.views.rm) return;
 
   const _pattern = /\d,\d,\d*/g;
+
+  let _timingTable = null;
 
   let _ctx = {};
   let _actions = {};
@@ -62,12 +79,29 @@ Vue.component('report-input', {
        _components[ix].item.cotaClass= !!(data.cotaClass) ? data.cotaClass : ''
      }
     },
+    showTiming: (system) => {
+      let _taskTimings = [];
+      let systemTimings = system.getTaskTiming();
+      for (var i = 0; i < systemTimings.length; i++) {
+        _taskTimings.push([i + 1, systemTimings[i]]);
+      }
+
+      if (_timingTable == null) {
+        _timingTable = new Vue({
+          el: '#timing-table',
+          data: {
+            rows: _taskTimings,
+            columns: ['Tarea', 'Tiempo']
+          }
+        });
+      }
+      else {
+        debugger;
+        _timingTable.data.rows = _taskTimings;
+      }
+    },
     fillResults: function (system) {
       _ctx.currentSystem = system;
-      //
-      // for (var i = 0; i < components.length; i++) {
-      //   components[i].destroy();
-      // }
 
       _actions.setComponent(0, {
         containerID: '#hyperperiod-box',
@@ -110,6 +144,7 @@ Vue.component('report-input', {
         cotaClass: system.isValidForBini() ? "verifies-cota" : "fails-cota",
       });
 
+      _actions.showTiming(system);
     }
   });
 

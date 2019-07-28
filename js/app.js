@@ -71,21 +71,23 @@
 
     this.isValidForBini =  ()  => this.getBini() <= 2;
 
-    this.taskTiming = () => {
+    this.getTaskTiming = () => {
       if (this._tasksTiming.length > 0) return this._tasksTiming;
 
       for (var i = 0; i < this.tasks.length; i++) {
+        let thisTask = this.tasks[i];
         if (i == 0){
-          this._tasksTiming.push(this.task.executionTime);
+          this._tasksTiming.push(thisTask.executionTime);
         }
         else {
           let prevTask = this.tasks[i - 1];
-          let prevTiming = this._taskTiming[i - 1];
-          let thisTask = this.tasks[i];
+          let prevTiming = this._tasksTiming[i - 1];
           let idealTiming = prevTiming + thisTask.executionTime;
-          this._tasksTiming.push(math.ceiling(prevTiming + (idealTiming / prevTask.period) * thisTask.executionTime));
+          this._tasksTiming.push(math.ceil(prevTiming + (idealTiming / prevTask.period) * thisTask.executionTime));
         }
       }
+
+      return this._tasksTiming;
     }
   };
 
