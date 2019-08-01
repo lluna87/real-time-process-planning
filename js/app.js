@@ -80,6 +80,7 @@
           this._tasksTiming.push(thisTask.executionTime);
         }
         else {
+          /* TODO This has to take into consideration all the tasks until this one */
           let prevTask = this.tasks[i - 1];
           let prevTiming = this._tasksTiming[i - 1];
           let idealTiming = prevTiming + thisTask.executionTime;
