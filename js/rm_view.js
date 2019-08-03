@@ -17,16 +17,32 @@ Vue.component('report-input', {
 Vue.component('timing-table', {
   props: ['rows', 'columns'],
   template:
-    '<table class="setr-table">' +
-      '<thead>' +
-        '<th v-for="col in columns">{{col}}</th>' +
-      '</thead>' +
-      '<tbody>' +
-        '<tr v-for="row in rows">' +
-          '<td v-for="col in columns">{{row[columns.indexOf(col)]}}</td>' +
-        '</tr>' +
-      '</tbody>' +
-    '</table>'
+  '<div class="mt-3 container timing-table-content">' +
+    '<div class="caption">' +
+      '<div class="input-label row"> Tiempos</div>' +
+      '<div class="row">' +
+        '<div class="table setr-table">' +
+          '<!-- Table start -->' +
+          '<div class="t-head">' +
+            '<!-- Table head start -->' +
+            '<div class="t-row cell-container">' +
+              '<div class="t-cell t-head-cell" v-for="col in columns"> {{col}}</div>' +
+            '</div>' +
+            '<!-- Table head end -->' +
+          '</div>' +
+          '<div class="t-body">' +
+            '<!-- Table body start -->' +
+            '<div class="t-row cell-container" v-for="row in rows">' +
+              '<!-- Table row start -->' +
+              '<div class="t-cell" v-for="col in columns">{{row[columns.indexOf(col)]}}</div>' +
+            '</div>' +
+            '<!-- Table boyd end -->' +
+          '</div>' +
+          '<!-- Table end -->' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+  '</div>'
 });
 
 (function () {
@@ -96,8 +112,7 @@ Vue.component('timing-table', {
         });
       }
       else {
-        debugger;
-        _timingTable.data.rows = _taskTimings;
+        _timingTable.rows = _taskTimings;
       }
     },
     fillResults: function (system) {

@@ -1,0 +1,30 @@
+.table {
+  display: flex;
+  flex-flow:column;
+  flex-wrap:wrap;
+}
+
+.table .cell-container {
+    flex-flow: row;
+    flex-grow: 1;
+    flex-wrap: nowrap;
+    display: flex;
+}
+
+.table .t-head {
+
+}
+
+.table .t-cell {
+  flex-grow: 1;
+  border: 1px solid #A5A5A5;
+}
+
+.table .t-body {
+  display:flex;
+  flex-flow:column;
+}
+
+.table .t-row {
+
+}

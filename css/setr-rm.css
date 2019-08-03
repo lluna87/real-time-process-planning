@@ -1,0 +1,102 @@
+.input-hint {
+  font-style: italic;
+  font-size: 1em;
+  color: #DCDCDC;
+}
+
+.input-label {
+  font-style: italic;
+  font-size: 1em;
+  color: #252525;
+}
+
+#rm-view-content{
+  width: 100vw;
+}
+
+.system-input {
+  display: flex;
+  flex-flow: row;
+}
+
+div.system-input {
+  width: 50vw;
+}
+
+.system-input input {
+}
+
+.system-input button {
+  margin-left: 0.5vw;
+}
+
+.result-box {
+  margin-right: 40px;
+}
+
+.evaluation-section {
+  display: flex;
+  flex-flow: row;
+}
+
+.verifies-cota {
+  -webkit-box-shadow: 0px 0px 4px #21de14;
+     -moz-box-shadow: 0px 0px 4px #21de14;
+          box-shadow: 0px 0px 4px #21de14;
+}
+
+.fails-cota {
+  -webkit-box-shadow: 0px 0px 4px #e30909;
+     -moz-box-shadow: 0px 0px 4px #e30909;
+          box-shadow: 0px 0px 4px #e30909;
+}
+
+.setr-table thead {
+  back
+}
+
+.bd-placeholder-img {
+  font-size: 1.125rem;
+  text-anchor: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+@media (min-width: 768px) {
+  .bd-placeholder-img-lg {
+    font-size: 3.5rem;
+  }
+}
+
+.timing-table-content
+{
+  margin: -14px;
+}
+
+.setr-table {
+    /*border: 1px solid #A5A5A5;
+    border-collapse: collapse;
+    border-radius: 1em;*/
+    overflow: hidden;
+}
+
+
+.setr-table .t-head-cell {
+  /*
+  padding: 0.2px;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  */
+  text-align: center;
+  background-color: #C5C5C5;
+}
+
+.setr-table .t-cell {
+  /*
+  border: 1px solid #A5A5A5;
+  padding: 3px;
+  */
+  text-align: center;
+}
