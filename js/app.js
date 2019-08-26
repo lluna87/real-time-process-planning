@@ -27,7 +27,7 @@
     this.hyperperiod = null;
 
     this.tasks = tasks;
-    this._tasksTiming = [];
+    this._responseTimes = [];
 
     this.getHyperperiod =  () => {
       if (!this.hyperperiod){
@@ -54,7 +54,7 @@
     this.getLiu =  () => {
       if (!this.liu) {
         let n = this.getN();
-        this.liu = math.round(n*(2^(1/n)-1), 2);
+		this.liu = math.round(n*(math.pow(2, 1/n) - 1), 2);
       }
       return this.liu;
     };
@@ -72,23 +72,48 @@
     this.isValidForBini =  ()  => this.getBini() <= 2;
 
     this.getTaskTiming = () => {
-      if (this._tasksTiming.length > 0) return this._tasksTiming;
+      if (this._responseTimes.length > 0) return this._responseTimes;
 
-      for (var i = 0; i < this.tasks.length; i++) {
-        let thisTask = this.tasks[i];
-        if (i == 0){
-          this._tasksTiming.push(thisTask.executionTime);
+      /* When there are no other tasks, reponse time = execution time */
+      this._responseTimes.push(this.tasks[0].executionTime);
+
+      if (this.tasks.length == 1) return this._responseTimes;
+
+      /* For the others calculate */
+      /*
+      t^(q+1) = Ci + SUM (j=1 -> i-1) Ceil(t^q / Tj).Cj
+      */
+
+      for (var i = 1; i < this.tasks.length; i++) {
+        let currentTask = this.tasks[i];
+        let prevTask = this.tasks[i - 1];
+
+        /* Add seed (Previous response time) to partial result */
+        let seed = this._responseTimes[i - 1];
+        let partialResults = [seed];
+        /* There is no previous result yet */
+        let previousResult = null;
+        /* Current result is the seed */
+        let currentResult = partialResults[0];
+
+        do {
+          previousResult = currentResult;
+          /* Current result initialized with the execution time of the current task  */
+          currentResult = currentTask.executionTime;
+
+          /* Iterate over all previous tasks -> SUM (from j=1 to i-1) Ceil(t^q / Tj).Cj */
+          for (let x = 0; x < i; x++) {
+            let loopTask = this.tasks[x];
+            currentResult += math.ceil(previousResult / loopTask.period) * loopTask.executionTime
+          }
+          /* If both values are different continue else a fixed point has been found */
         }
-        else {
-          /* TODO This has to take into consideration all the tasks until this one */
-          let prevTask = this.tasks[i - 1];
-          let prevTiming = this._tasksTiming[i - 1];
-          let idealTiming = prevTiming + thisTask.executionTime;
-          this._tasksTiming.push(math.ceil(prevTiming + (idealTiming / prevTask.period) * thisTask.executionTime));
-        }
+        while (previousResult != currentResult);
+
+        this._responseTimes.push(currentResult);
       }
 
-      return this._tasksTiming;
+      return this._responseTimes;
     }
   };
 

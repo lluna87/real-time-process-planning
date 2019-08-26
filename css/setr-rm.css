@@ -51,9 +51,6 @@ div.system-input {
           box-shadow: 0px 0px 4px #e30909;
 }
 
-.setr-table thead {
-  back
-}
 
 .bd-placeholder-img {
   font-size: 1.125rem;
@@ -73,6 +70,10 @@ div.system-input {
 .timing-table-content
 {
   margin: -14px;
+}
+
+#timing-table {
+  width: 10vw;
 }
 
 .setr-table {
