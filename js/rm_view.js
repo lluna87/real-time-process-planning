@@ -159,6 +159,16 @@ Vue.component('timing-table', {
         cotaClass: system.isValidForBini() ? "verifies-cota" : "fails-cota",
       });
 
+      _actions.setComponent(5, {
+        containerID: '#first-empty-slot',
+        componentID: 'first-empty-slot-input',
+        label:"Primer ranura vacìa",
+        value: math.round(system.getFirstFreeSlot(), 6),
+        title: "",
+        cotaClass: ""
+      });
+
+      document.component = _components;
       _actions.showTiming(system);
     }
   });

@@ -54,7 +54,7 @@
     this.getLiu =  () => {
       if (!this.liu) {
         let n = this.getN();
-		this.liu = math.round(n*(math.pow(2, 1/n) - 1), 2);
+		    this.liu = math.round(n*(math.pow(2, 1/n) - 1), 2);
       }
       return this.liu;
     };
@@ -114,6 +114,38 @@
       }
 
       return this._responseTimes;
+    }
+
+    this.getFirstFreeSlot = () => {
+      if (this.firstFreeSlot === null) return this._firstFreeSlot;
+
+      /* M >= menor t | t = 1 + j=1 SUM n (techo(t / Tj) * Cj) */
+
+      let latestResponseTime = _.last(this.getTaskTiming());
+
+      let seed = 1 + latestResponseTime;
+
+      let partialResults = [seed];
+      /* There is no previous result yet */
+      let previousResult = null;
+      /* Current result is the seed */
+      let currentResult = partialResults[0];
+
+      do {
+        previousResult = currentResult;
+        /* Current result initialized with 1 */
+        currentResult = 1;
+
+        /* Iterate over all previous tasks -> SUM (from j=1 to i-1) Ceil(t^q / Tj).Cj */
+        for (let x = 0; x < this.tasks.length; x++) {
+          let loopTask = this.tasks[x];
+          currentResult += math.ceil(previousResult / loopTask.period) * loopTask.executionTime;
+        }
+        /* If both values are different continue else a fixed point has been found */
+      }
+      while (previousResult != currentResult);
+
+      return previousResult;
     }
   };
 
